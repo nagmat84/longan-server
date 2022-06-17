@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Contracts\HasRandomID;
 use App\DTO\PhotoSortingCriterion;
+use App\Models\Extensions\FixedQueryBuilder;
 use App\Models\Extensions\HasAttributesPatch;
 use App\Models\Extensions\HasBidirectionalRelationships;
 use App\Models\Extensions\HasRandomIDAndLegacyTimeBasedID;
 use App\Models\Extensions\ThrowsConsistentExceptions;
-use App\Models\Extensions\UseFixedQueryBuilder;
 use App\Models\Extensions\UTCBasedTimes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -108,8 +108,6 @@ class BaseAlbumImpl extends Model implements HasRandomID
 	use ThrowsConsistentExceptions;
 	use UTCBasedTimes;
 	use HasBidirectionalRelationships;
-	/** @phpstan-use UseFixedQueryBuilder<BaseAlbumImpl> */
-	use UseFixedQueryBuilder;
 
 	protected $table = 'base_albums';
 
@@ -279,5 +277,24 @@ class BaseAlbumImpl extends Model implements HasRandomID
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param $query
+	 *
+	 * @return FixedQueryBuilder<BaseAlbumImpl>
+	 */
+	public function newEloquentBuilder($query): FixedQueryBuilder
+	{
+		return new FixedQueryBuilder($query); // @phpstan-ignore-line
+	}
+
+	/**
+	 * @return FixedQueryBuilder<BaseAlbumImpl>
+	 */
+	public static function query(): FixedQueryBuilder
+	{
+		/** @noinspection PhpIncompatibleReturnTypeInspection */
+		return parent::query(); // @phpstan-ignore-line
 	}
 }

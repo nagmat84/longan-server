@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @extends HasMany<SizeVariant>
+ */
 class HasManySizeVariants extends HasMany
 {
 	public function __construct(Photo $owningPhoto)

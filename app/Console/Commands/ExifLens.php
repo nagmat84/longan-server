@@ -51,9 +51,10 @@ class ExifLens extends Command
 			}
 
 			// we use lens because this is the one which is most likely to be empty.
-			$photos = Photo::with(['size_variants' => function (HasMany $r) {
-				$r->where('type', '=', SizeVariant::ORIGINAL);
-			}])
+			$photos = Photo::query()
+				->with(['size_variants' => function (HasMany $r) {
+					$r->where('type', '=', SizeVariant::ORIGINAL);
+				}])
 				->where('lens', '=', '')
 				->whereNotIn('type', MediaFile::SUPPORTED_VIDEO_MIME_TYPES)
 				->offset($offset)

@@ -38,7 +38,7 @@ class Fullpage extends Component
 
 			if ($photoId !== null) {
 				$this->mode = 'photo';
-				$this->photo = Photo::with('album')->findOrFail($photoId);
+				$this->photo = Photo::query()->with('album')->findOrFail($photoId);
 			}
 		}
 	}

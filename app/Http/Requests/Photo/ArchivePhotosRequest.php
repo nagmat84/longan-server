@@ -53,7 +53,7 @@ class ArchivePhotosRequest extends BaseApiRequest implements HasPhotos, HasSizeV
 	{
 		$this->sizeVariant = $values[HasSizeVariant::SIZE_VARIANT_ATTRIBUTE];
 
-		$photoQuery = Photo::with(['album']);
+		$photoQuery = Photo::query()->with(['album']);
 		// The condition is required, because Lychee also supports to archive
 		// the "live video" as a size variant which is not a proper size variant
 		if (array_key_exists($this->sizeVariant, Archive::VARIANT2VARIANT)) {
@@ -73,11 +73,6 @@ class ArchivePhotosRequest extends BaseApiRequest implements HasPhotos, HasSizeV
 				},
 			]);
 		}
-		// `findOrFail` returns the union `Photo|Collection<Photo>`
-		// which is not assignable to `Collection<Photo>`; but as we query
-		// with an array of IDs we never get a single entity (even if the
-		// array only contains a single ID).
-		// @phpstan-ignore-next-line
 		$this->photos = $photoQuery->findOrFail(
 			explode(',', $values[HasPhotos::PHOTO_IDS_ATTRIBUTE])
 		);

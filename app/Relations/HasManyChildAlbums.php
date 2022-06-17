@@ -14,6 +14,9 @@ use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @extends HasManyBidirectionally<Album>
+ */
 class HasManyChildAlbums extends HasManyBidirectionally
 {
 	protected AlbumQueryPolicy $albumQueryPolicy;

@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * Common base class of all photo relations for albums which are not the
  * direct parent of the queried photos, but include the photo due to some
  * indirect condition.
+ *
+ * @extends Relation<Photo>
  */
 abstract class HasManyPhotos extends Relation
 {
@@ -58,6 +60,9 @@ abstract class HasManyPhotos extends Relation
 		);
 	}
 
+	/**
+	 * @return FixedQueryBuilder<Photo>
+	 */
 	protected function getRelationQuery(): FixedQueryBuilder
 	{
 		/**
@@ -65,7 +70,6 @@ abstract class HasManyPhotos extends Relation
 		 * because it was set in the constructor as `Photo::query()`.
 		 *
 		 * @noinspection PhpIncompatibleReturnTypeInspection
-		 *
 		 * @phpstan-ignore-next-line
 		 */
 		return $this->query;
@@ -78,7 +82,6 @@ abstract class HasManyPhotos extends Relation
 		 * because it was set in the constructor as `$owningAlbum`.
 		 *
 		 * @noinspection PhpIncompatibleReturnTypeInspection
-		 *
 		 * @phpstan-ignore-next-line
 		 */
 		return $this->parent;
@@ -117,7 +120,7 @@ abstract class HasManyPhotos extends Relation
 	 * sorting, the collection is sorted after is has been fetched from
 	 * the DB.
 	 *
-	 * @return Collection
+	 * @return Collection<Photo>
 	 *
 	 * @throws InvalidOrderDirectionException
 	 */

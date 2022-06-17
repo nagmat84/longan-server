@@ -11,7 +11,6 @@ use App\Facades\Helpers;
 use App\Models\Extensions\ConfigsHas;
 use App\Models\Extensions\FixedQueryBuilder;
 use App\Models\Extensions\ThrowsConsistentExceptions;
-use App\Models\Extensions\UseFixedQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -34,8 +33,6 @@ class Configs extends Model
 {
 	use ConfigsHas;
 	use ThrowsConsistentExceptions;
-	/** @phpstan-use UseFixedQueryBuilder<Configs> */
-	use UseFixedQueryBuilder;
 
 	protected const INT = 'int';
 	protected const STRING = 'string';
@@ -259,9 +256,9 @@ class Configs extends Model
 	 */
 
 	/**
-	 * @param FixedQueryBuilder $query
+	 * @param FixedQueryBuilder<Configs> $query
 	 *
-	 * @return FixedQueryBuilder
+	 * @return FixedQueryBuilder<Configs>
 	 *
 	 * @throws QueryBuilderException
 	 */
@@ -273,9 +270,9 @@ class Configs extends Model
 	/**
 	 * Logged user can see.
 	 *
-	 * @param FixedQueryBuilder $query
+	 * @param FixedQueryBuilder<Configs> $query
 	 *
-	 * @return FixedQueryBuilder
+	 * @return FixedQueryBuilder<Configs>
 	 *
 	 * @throws QueryBuilderException
 	 */
@@ -287,9 +284,9 @@ class Configs extends Model
 	/**
 	 * Only admin can see.
 	 *
-	 * @param FixedQueryBuilder $query
+	 * @param FixedQueryBuilder<Configs> $query
 	 *
-	 * @return FixedQueryBuilder
+	 * @return FixedQueryBuilder<Configs>
 	 *
 	 * @throws QueryBuilderException
 	 */
@@ -304,5 +301,24 @@ class Configs extends Model
 	public static function invalidateCache(): void
 	{
 		self::$cache = [];
+	}
+
+	/**
+	 * @param $query
+	 *
+	 * @return FixedQueryBuilder<Configs>
+	 */
+	public function newEloquentBuilder($query): FixedQueryBuilder
+	{
+		return new FixedQueryBuilder($query); // @phpstan-ignore-line
+	}
+
+	/**
+	 * @return FixedQueryBuilder<Configs>
+	 */
+	public static function query(): FixedQueryBuilder
+	{
+		/** @noinspection PhpIncompatibleReturnTypeInspection */
+		return parent::query(); // @phpstan-ignore-line
 	}
 }

@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\InvalidCastException;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @extends HasManyBidirectionally<Photo>
+ */
 class HasManyChildPhotos extends HasManyBidirectionally
 {
 	protected PhotoQueryPolicy $photoQueryPolicy;
@@ -35,6 +38,9 @@ class HasManyChildPhotos extends HasManyBidirectionally
 		);
 	}
 
+	/**
+	 * @return FixedQueryBuilder<Photo>
+	 */
 	protected function getRelationQuery(): FixedQueryBuilder
 	{
 		/**
@@ -103,9 +109,9 @@ class HasManyChildPhotos extends HasManyBidirectionally
 	/**
 	 * Match the eagerly loaded results to their parents.
 	 *
-	 * @param array      $models   an array of parent models
-	 * @param Collection $results  the unified collection of all child models of all parent models
-	 * @param string     $relation the name of the relation from the parent to the child models
+	 * @param array<Album>      $models   an array of parent models
+	 * @param Collection<Photo> $results  the unified collection of all child models of all parent models
+	 * @param string            $relation the name of the relation from the parent to the child models
 	 *
 	 * @return array
 	 *

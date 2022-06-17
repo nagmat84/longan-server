@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Exceptions\ModelDBException;
+use App\Models\Extensions\FixedQueryBuilder;
 use App\Exceptions\UnauthenticatedException;
 use App\Models\Extensions\ThrowsConsistentExceptions;
-use App\Models\Extensions\UseFixedQueryBuilder;
 use App\Models\Extensions\UTCBasedTimes;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Collection;
@@ -47,8 +47,6 @@ class User extends Authenticatable implements WebAuthnAuthenticatable
 	use ThrowsConsistentExceptions {
 		delete as parentDelete;
 	}
-	/** @phpstan-use UseFixedQueryBuilder<User> */
-	use UseFixedQueryBuilder;
 
 	/**
 	 * @var string[] the attributes that are mass assignable
@@ -185,5 +183,24 @@ class User extends Authenticatable implements WebAuthnAuthenticatable
 	public function getHasTokenAttribute(): bool
 	{
 		return $this->token !== null;
+	}
+
+	/**
+	 * @param $query
+	 *
+	 * @return FixedQueryBuilder<User>
+	 */
+	public function newEloquentBuilder($query): FixedQueryBuilder
+	{
+		return new FixedQueryBuilder($query); // @phpstan-ignore-line
+	}
+
+	/**
+	 * @return FixedQueryBuilder<User>
+	 */
+	public static function query(): FixedQueryBuilder
+	{
+		/** @noinspection PhpIncompatibleReturnTypeInspection */
+		return parent::query(); // @phpstan-ignore-line
 	}
 }

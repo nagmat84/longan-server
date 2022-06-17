@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Extensions\FixedQueryBuilder;
 use App\Models\Extensions\ThrowsConsistentExceptions;
-use App\Models\Extensions\UseFixedQueryBuilder;
 use App\Models\Extensions\UTCBasedTimes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -23,8 +23,6 @@ class Logs extends Model
 {
 	use UTCBasedTimes;
 	use ThrowsConsistentExceptions;
-	/** @phpstan-use UseFixedQueryBuilder<Logs> */
-	use UseFixedQueryBuilder;
 
 	public const SEVERITY_EMERGENCY = 0;
 	public const SEVERITY_ALERT = 1;
@@ -135,5 +133,24 @@ class Logs extends Model
 			$log->save();
 		} catch (\Throwable) {
 		}
+	}
+
+	/**
+	 * @param $query
+	 *
+	 * @return FixedQueryBuilder<Logs>
+	 */
+	public function newEloquentBuilder($query): FixedQueryBuilder
+	{
+		return new FixedQueryBuilder($query); // @phpstan-ignore-line
+	}
+
+	/**
+	 * @return FixedQueryBuilder<Logs>
+	 */
+	public static function query(): FixedQueryBuilder
+	{
+		/** @noinspection PhpIncompatibleReturnTypeInspection */
+		return parent::query(); // @phpstan-ignore-line
 	}
 }
