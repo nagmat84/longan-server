@@ -9,10 +9,10 @@ use App\Actions\Album\Delete;
 use App\Actions\Album\Merge;
 use App\Actions\Album\Move;
 use App\Actions\Album\PositionData;
-use App\Actions\Album\SetProtectionPolicy;
+use App\Actions\Album\SetProtectionPolicies;
 use App\Actions\Album\Unlock;
-use App\Contracts\AbstractAlbum;
 use App\Contracts\LycheeException;
+use App\DTO\AbstractAlbumDTO;
 use App\DTO\PositionData as PositionDataDTO;
 use App\Exceptions\MediaFileOperationException;
 use App\Exceptions\ModelDBException;
@@ -29,7 +29,7 @@ use App\Http\Requests\Album\SetAlbumCoverRequest;
 use App\Http\Requests\Album\SetAlbumDescriptionRequest;
 use App\Http\Requests\Album\SetAlbumLicenseRequest;
 use App\Http\Requests\Album\SetAlbumNSFWRequest;
-use App\Http\Requests\Album\SetAlbumProtectionPolicyRequest;
+use App\Http\Requests\Album\SetAlbumProtectionPoliciesRequest;
 use App\Http\Requests\Album\SetAlbumSortingRequest;
 use App\Http\Requests\Album\SetAlbumsTitleRequest;
 use App\Http\Requests\Album\SetAlbumTagsRequest;
@@ -80,11 +80,11 @@ class AlbumController extends Controller
 	 *
 	 * @param GetAlbumRequest $request
 	 *
-	 * @return AbstractAlbum
+	 * @return AbstractAlbumDTO
 	 */
-	public function get(GetAlbumRequest $request): AbstractAlbum
+	public function get(GetAlbumRequest $request): AbstractAlbumDTO
 	{
-		return $request->album();
+		return new AbstractAlbumDTO($request->album());
 	}
 
 	/**
@@ -134,20 +134,20 @@ class AlbumController extends Controller
 	}
 
 	/**
-	 * Sets the protection policy of the album.
+	 * Sets the protection policies of the album.
 	 *
-	 * @param SetAlbumProtectionPolicyRequest $request
-	 * @param SetProtectionPolicy             $setProtectionPolicy
+	 * @param SetAlbumProtectionPoliciesRequest $request
+	 * @param SetProtectionPolicies             $setProtectionPolicies
 	 *
 	 * @return void
 	 *
 	 * @throws LycheeException
 	 */
-	public function setProtectionPolicy(SetAlbumProtectionPolicyRequest $request, SetProtectionPolicy $setProtectionPolicy): void
+	public function setProtectionPolicies(SetAlbumProtectionPoliciesRequest $request, SetProtectionPolicies $setProtectionPolicies): void
 	{
-		$setProtectionPolicy->do(
+		$setProtectionPolicies->do(
 			$request->album(),
-			$request->albumProtectionPolicy(),
+			$request->albumProtectionPolicies(),
 			$request->isPasswordProvided(),
 			$request->password()
 		);
